@@ -1,0 +1,51 @@
+Joshua Frankie B. Rayo
+CS180 THX
+Machine Exercise 2 - Naive Bayes Classifier for Spam Filtering
+
+Given the training data, this simple program aims to classify new mails as ham or spam using Naive Bayes approach.
+
+It is important to know that since the training data given is final, this program does not read the training data anymore.
+We don't want to wait for a long time.
+I already gathered the important information on the given training data which is already stored in the source code:
+	(1) The frequency dictionary of the spam and ham mails (how many files contain the word)
+		frHam = {'writings': 4, 'pacfocol': 1, 'sonja': 1, 'qamarus': 1, ...}
+		frSpam = {'latinoweb': 1, 'yellow': 2, 'four': 39, 'woody': 1, ...}
+	(2) The number of spam mails is 350, ham mails is 350, for a total of 700 mails.
+That is the reason why the source code is quite large.
+
+The main function does the following steps:
+The program tries to open the test files in the 'dataset/test' subdirectory and instantiate an output file stream.
+The files are read by the program and obtains the list of words that contain the file, without duplicates (since we are only concerned about the presence/absence of a certain word to compute its probability).
+Then the program calls the SpamFilter.filterIfHam() procedure to classify the file (to be discussed later).
+The programs' observation is printed in a file named 'output', including the total number of ham and spam messages.
+Then the program will close its output stream and terminates itself.
+
+The SpamFilter ADT stores the relevant information for classifying test files:
+	(1) The total number of files in the training data, including the number of ham and spam messages
+	(2) The frequency dictionary of the spam and ham mails (given above)
+	(3) The dictionary of all words (to be used in constructing the test vector)
+	(4) The total number of ham and spam messages
+The filterIfHam() function constructs the test vector for a particular mail and calls the prob() function to compute the probability of the mail being ham given its contents.
+I used the decimal module of Python to implement the naive classifier. This module handles practically infinite precision.
+The prob() function uses the vector to compute the probability. A mail is ham if the computed probability value is greater than or equal to Decimal(.5).
+
+We recall our conditional probability equation:
+p(ham | W) = p(ham)*PI(p(Wi | ham)) / [p(ham)*PI(p(Wi | ham)) + p(spam)*PI(p(Wi | spam))]
+we let pWiHam = PI(p(Wi | ham)) and pWiSpam = PI(p(Wi | spam)) so that our new equation is:
+p(ham | W) = p(ham)*pWiHam / [p(ham)*pWiHam + p(spam)*pWiSpam]
+
+We know the p(ham) and p(spam) is not equal to zero since we have training data.
+
+We may encounter these four cases when computing the probability:
+Case 1: The probability of all words given that it is ham is not zero [p(Wi | ham) != 0, for any i] and p(Wi | spam) != 0, for any i
+	The prob() function returns the computed value.
+Case 2: p(Wi | ham) = 0, for some i and p(Wi | spam) != 0, for any i
+	Automatically pWiHam = 0 and the probability is zero and the mail is spam.
+Case 3: p(Wi | ham) != 0, for any i and p(Wi | spam) = 0, for some i
+	Automatically pWiSpam = 0 and the probability is one and the mail is ham.
+Case 4: p(Wi | ham) = 0, for some i and p(Wi | spam) = 0, for some i
+	Automatically pWiHam = 0 , pWiSpam = 0 and the probability is undefined.
+	In this case we use lambda smoothing where lambda = 1.0 and we compute again to eliminate undefined values.
+
+When I compared my output results (mine and yours), we did not have the same classification for the test file named '47.txt'. My program says it is ham with the probability of 0.5011371139314797153547061844 but yours says it is spam.
+We have the same observation about the other test files. :)
