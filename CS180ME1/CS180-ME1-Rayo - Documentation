@@ -1,0 +1,27 @@
+Joshua Frankie B. Rayo
+CS180 THX
+Machine Exercise 1 - Solution by Searching
+
+Given a map, source, destination and step costs for each action, this simple program aims to find the optimal path (shortest path with minimum path cost). It uses two strategies in graph search: the greedy best-first search and A*-search.
+
+The data should be written in file with name input.txt for the program to be able to feed it.
+
+The main function does the following steps:
+The program tries to open the input data
+The data is read by the program and parse the contents.
+Relevant information read by the program (map, source, destination and path cost for each action) will be the parameters of the Map class.
+The program displays the information read from the input file.
+The program tries to solve the map search using greedy search and creates the output file greedy.out for the solution obtained.
+If there is a solution, the program will print the coordinates of the path and the total path cost.
+The solution is also displayed in the screen.
+Next, the program will use the A*-search.
+
+The Node class is used to store relevant information about the current state of the problem and the basic building block of the search tree. The Node class stores the current state (coordinates) stored in a list, the parent node, action taken, path-cost g(n), heuristic h(n) and f(n) that is equal to g(n) + h(n).
+This class includes an constructor and its string representation so that users can understand the abstract data type.
+
+The Map class is used to store the data from the input file.
+The method solveGreedy() solves the maze problem using greedy search. The algorithm is adapted from the reference book, the same for the algorithm for solveA().
+The predicate function isLegalMove() return True if a particular coordinate can be allowed to be a child node of the current node (i.e. given a current point, it will determine if the points surrounding it is passable.)
+The predicate function isExplored() returns True if a point is already discovered in the map.
+The function distance() returns the Euclidean distance of two points.
+The method str() displays information about the maze problem.
