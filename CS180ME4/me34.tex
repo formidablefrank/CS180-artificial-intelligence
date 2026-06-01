@@ -1,0 +1,79 @@
+\documentclass[10pt, twocolumn]{article}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\newcommand{\highlight}[1]{\colorbox{gray}{$\displaystyle#1$}}
+\newcommand{\head}[1]{\textnormal{\textbf{#1}}}
+\setlength{\columnsep}{.5in}
+
+\begin{document}
+	\title{Artificial Neural Networks vs. Support Vector Machines\\for Image Classification}
+	\author {Joshua Frankie B. Rayo, Edward Nataniel C. Apostol\\CS 180 THW}
+	\maketitle
+	
+	\section{Summary}
+	This paper shows the implementation of image classification using the two most important discriminative models: ANN and SVM.
+	Training and testing data are made possible by using ANN and LibSVM libraries, respectively.
+	This paper also shows the accuracy of these two discriminative models.
+	
+	\section{Steps in training and testing data}
+	For every subdirectory of 'faces' directory, we removed all the small image files (those filenames that contains \texttt{\_2} or \texttt{\_4} in it).
+	The original images are used for training and testing data.
+	For the training data, we used only 24 .PGM images per class.
+	So how do we form the feature vector? We studied the PGM image specification at \textit{http://netpbm.sourceforge.net/doc/pgm.html}.
+	When a PGM image is opened in a plain text editor, we observed the similar pattern:\\
+	\texttt{
+	P2\\
+	24 7\\
+	15\\
+	0  0  0  0  0  0  0  0  ...\\
+	0  3  3  3  3  0  0  7  ...\\
+	0  3  0  0  0  0  0  7  ...\\
+	0  3  3  3  0  0  0  7  ...\\
+	0  3  0  0  0  0  0  7  ...\\
+	0  3  0  0  0  0  0  7  ...\\
+	0  0  0  0  0  0  0  0  ...\\}
+	The first three rows of the image is only a metadata.
+	Since we are only concerned about the pixels of the image, we can omit them.
+	We form the feature vector row-wise.
+	
+	\subsection{SVM}
+	Given the configuration above, its feature vector to be feed in ANN is
+	$F = [<class\_no.> 1:0\: 2:0\: ...\: 25:0\: 26:3\: ...]$.
+	The remaining images not trained are used for testing.
+	We gathered the images to be trained, obtained an SVM model for it and use the model to test the images to be tested.
+	
+	\section{Results and Discussions}
+	\subsection{SVM}
+	For a fixed kernel but different parameters, the accuracy of classification changes.
+	Here is the result from different kernels used in SVM:
+	\begin{center}
+	\begin{tabular}{c c c c}
+		\hline
+		\head{Kernel} & \head{Param} & \head{Correct} & \head{Accuracy}\\
+		\hline
+		linear & & 175/180 & 97.2222\% \\
+		polynomial & d=3 & 175/180 & 97.2222\% \\
+		 & d=6 & 174/180 & 96.6667\% \\
+		 & d=10 & 175/180 & 97.2222\% \\
+		RBF & g=1/(128*120) & 53/180 & 29.4444\% \\
+		 & g=0.1 & 9/180 & 5\% \\
+		 & g=0.25 & 9/180 & 5\% \\
+		 & g=0.5 & 9/180 & 5\% \\
+		 & g=0.75 & 9/180 & 5\% \\
+		 & g=1.0 & 9/180 & 5\% \\
+		sigmoid & g=1/(128*120) & 9/180 & 5\% \\
+		 & g=0.1 & 9/180 & 5\% \\
+		 & g=0.25 & 9/180 & 5\% \\
+		 & g=0.5 & 9/180 & 5\% \\
+		 & g=0.75 & 9/180 & 5\% \\
+		 & g=1.0 & 9/180 & 5\% \\
+		\hline
+	\end{tabular}
+	\end{center}
+	It is a very good idea to treat each pixel as a feature, because each person has different facial features.
+	It is very important to notice the person's difference with each other.
+	Another good thing is, even if that person uses sunglasses or change his facial expression, the SVM can nearly recognize the face of that person.
+	For the sigmoid kernel, which appear to be the worst kernel, it does not seem to have a change.
+	We can say that the linear function is the best SVM kernel for image classification (for PGM files).
+\end{document}
